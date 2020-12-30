@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
+#olla amigos
+
 import socket ttttttttttt
 import os
 import sys
