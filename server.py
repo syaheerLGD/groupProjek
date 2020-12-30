@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*- 
 
-import socket
+import socket ttttttttttt
 import os
 import sys
 import select
