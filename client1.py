@@ -19,8 +19,13 @@ class Client:
         self.s.connect((self.target_ip,int(self.target_port)))
 
     def main(self):
+        print("Enter 'exit' to terminate connection.")
         while 1:
             file_name = input('Enter file name on server --> ')
+            if file_name == "exit":
+                self.s.shutdown(socket.SHUT_RWDR)
+                self.s.close()
+            
             self.s.send(file_name.encode())
 
             confirmation = self.s.recv(1024)
