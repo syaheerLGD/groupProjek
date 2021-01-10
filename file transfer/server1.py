@@ -1,59 +1,80 @@
 import os
+import sys
 import threading
 import socket
-from _thread import *
 import tqdm
+import time
 
-SEPARATOR = "<SEPARATOR>"
-BUFFER_SIZE = 4096
 #ThreadCount = 0
+
+def animation(msg):
+        for char in msg:
+                sys.stdout.write(char)
+                sys.stdout.flush()
+                time.sleep(0.1)
+
 class Server:
-    print('\t\tWelcome To Secure File Transfer')
+    start = '\t\tWelcome To Secure File Transfer\n'
+    animation(start)
     print('-------------------------------------------------------------------')
-    print('Server IP : 192.168.1.11') 
+    numIp = '\tServer IP : 192.168.1.11\n'
+    animation(numIp)
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.accept_connections()
     
     def accept_connections(self):
-        ip = str(input('Enter Ip Address Of Your Server : '))
-        port = int(input('Enter Desired Port Number : '))
+        ip = str(input('\tEnter Ip Address Of Your Server : '))
+        port = int(input('\tEnter Desired Port Number : '))
 
         self.sock.bind((ip,port))
         self.sock.listen(100)
         print('\n')
 
-        print('Socket Connect to IP : '+ip)
-        print('Socket Connect to port : '+str(port))
+        print('\tSocket Connect to IP : '+ip)
+        print('\tSocket Connect to port : '+str(port))
 
         while 1:
             c, addr = self.sock.accept()
-#            print(c)
+            #print(c)
 
             threading.Thread(target=self.handle_client,args=(c,addr,)).start()
 
     def handle_client(self,c,addr):
-        data = c.recv(1024).decode()
-        filesize = os.path.getsize(data)
-        progress = tqdm.tqdm(range(filesize), f"sending {data}", unit="B", unit_scale=True, unit_divisor=1024)
-    
-        if not os.path.exists(data):
-            c.send("file doesn't exist in the server".encode())
+        with open("login.txt", "r") as login:
+            username = c.recv(1024).decode()
+            password = c.recv(1024).decode()
 
-        else:
-            with open(data, "rb") as f:
-               c.send(f"{data}{SEPARATOR}{filesize}".encode())
-               print('Sending',data)
-               if data != '':
-               # file = open(data,'rb')
-                  data = f.read(BUFFER_SIZE)
-                  while data:
-                     c.send(data)
-                     progress.update(len(data))
-                     data = f.read(1024)
+            jumpa = "tak jumpa";
+            for line in login:
+                creds = line.strip()
+                if creds.split(":")[0] in username and creds.split(":")[1] in password:
+                    jumpa = "jumpa";
 
-                     c.shutdown(socket.SHUT_RDWR)
-                     c.close()
+            if jumpa == "jumpa":
+                c.send(("\tWelcome back: %s" % (username)).encode())
+            else:
+                c.send("Not-a-user".encode())
+                #c.close()
+
+            print('\tConnected to :' + addr[0])
+            data = c.recv(1024).decode()
+
+            if not os.path.exists(data):
+                c.send("File Doesn't Exist In The Server".encode())
+
+            else:
+                c.send("File Exist :)".encode())
+                print('\tSending',data)
+                if data != '':
+                    file = open(data,'rb')
+                    data = file.read(1024)
+                    while data:
+                        c.send(data)
+                        data = file.read(1024)
+
+                        c.shutdown(socket.SHUT_RDWR)
+                        c.close()
                 
 
 server = Server()
