@@ -49,13 +49,14 @@ class Client:
         else:
             print(login.decode())
 
+
         print("\t|Enter 'exit' To Terminate Connection.| ")
         while 1:
             file_name = input('\tPlease Enter File Name On Server : ')
             if file_name == "exit":
                 self.sock.shutdown(socket.SHUT_RWDR)
                 self.sock.close()
-                sys.exit()
+                #sys.exit()
 
             else:
                 self.sock.send(file_name.encode())
@@ -82,7 +83,6 @@ class Client:
 
                         file.write(data)
 
-                #print('\t\t',file_name)
                 success = '\tFile Successfully Downloaded.\n'
                 animation(success)
 
