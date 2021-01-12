@@ -63,7 +63,7 @@ class Server:
                         jumpa = "jumpa";
 
                 if jumpa == "jumpa":
-                    c.send(("\tWelcome back: %s" % (username)).encode())
+                    c.send(("\tWelcome New User : %s" % (username)).encode())
                 else:
                     c.send("Not-a-user".encode())
                     #c.close()
