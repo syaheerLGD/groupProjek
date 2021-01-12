@@ -19,12 +19,12 @@ class Server:
     start = '\t\tWelcome To Secure File Transfer\n'
     animation(start)
     print('-------------------------------------------------------------------')
-    numIp = '\tServer IP : 192.168.1.11\n'
+    numIp = '\tServer IP : 192.168.0.200\n'
     animation(numIp)
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.Terima_connections()
-    
+
     def Terima_connections(self):
         ip = str(input('\tEnter Ip Address Of Your Server : '))
         port = int(input('\tEnter Desired Port Number : '))
@@ -38,38 +38,54 @@ class Server:
             print('\tConnected to :' + addr[0])
 
             threading.Thread(target=self.handle_client,args=(c,addr,)).start()
-
+            
     def handle_client(self,c,addr):
-        with open("login.txt", "w") as register:
-            use = c.recv(1024).decode()
-            pas = c.recv(1024).decode()
-            register.write(use)
-            register.write(":")
-            register.write(pas)
-            c.send("continue".encode())
+        New = c.recv(1024)
+        if New.decode() == "y":
+            with open("login.txt", "w") as register:
+                use = c.recv(1024).decode()
+                pas = c.recv(1024).decode()
+                register.write(use)
+                register.write(":")
+                register.write(pas)
+                c.send("continue".encode())
 
-        with open("login.txt", "r") as login:
-            username = c.recv(1024).decode()
-            password = c.recv(1024).decode()
+            with open("login.txt", "r") as login:
+                username = c.recv(1024).decode()
+                password = c.recv(1024).decode()
 
-            jumpa = "tak jumpa";
-            for line in login:
-                creds = line.strip()
-                if creds.split(":")[0] in username and creds.split(":")[1] in password:
-                    jumpa = "jumpa";
+                jumpa = "tak jumpa";
+                for line in login:
+                    creds = line.strip()
+                    if creds.split(":")[0] in username and creds.split(":")[1] in password:
+                        jumpa = "jumpa";
 
-            if jumpa == "jumpa":
-                c.send(("\tWelcome back: %s" % (username)).encode())
-            else:
-                c.send("Not-a-user".encode())
-                #c.close()
+                if jumpa == "jumpa":
+                    c.send(("\tWelcome back: %s" % (username)).encode())
+                else:
+                    c.send("Not-a-user".encode())
+                    #c.close()
+        else:
+            with open("login.txt", "r") as login:
+                username = c.recv(1024).decode()
+                password = c.recv(1024).decode()
 
+                jumpa = "tak jumpa";
+                for line in login:
+                    creds = line.strip()
+                    if creds.split(":")[0] in username and creds.split(":")[1] in password:
+                        jumpa = "jumpa";
 
+                if jumpa == "jumpa":
+                    c.send(("\tWelcome back: %s" % (username)).encode())
+                else:
+                    c.send("Not-a-user".encode())
+                    #c.close()
 
         data = c.recv(1024).decode()
         if not os.path.exists(data):
             c.send("File Doesn't Exist In The Server".encode())
-
+            
         else:
             c.send("File Exist".encode())
             print('\tSending',data)
@@ -84,6 +100,6 @@ class Server:
 
                 c.shutdown(socket.SHUT_RDWR)
                 c.close()
-                
+
 
 server = Server()
