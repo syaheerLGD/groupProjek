@@ -92,10 +92,10 @@ class Client:
             if confirm.decode() == "File Doesn't Exist In The Server":
                 exist = "\tFile Doesn't Exist At Server.\n"
                 animation(exist)
-
-                self.sock.shutdown(socket.SHUT_RDWR)
-                self.sock.close()
-                self.reconnect()
+                continue
+                #self.sock.shutdown(socket.SHUT_RDWR)
+                #self.sock.close()
+                #self.reconnect()
 
             else:
                 write_name = file_name
@@ -109,12 +109,14 @@ class Client:
                             break
 
                         file.write(data)
+                        break
 
                 success = '\tFile Successfully Downloaded.\n'
                 animation(success)
+                continue
 
-                self.sock.shutdown(socket.SHUT_RDWR)
-                self.sock.close()
-                self.reconnect()
+                #self.sock.shutdown(socket.SHUT_RDWR)
+                #self.sock.close()
+                #self.reconnect()
 
 client = Client()
