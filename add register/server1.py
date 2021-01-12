@@ -42,12 +42,14 @@ class Server:
     def handle_client(self,c,addr):
         New = c.recv(1024)
         if New.decode() == "y":
-            with open("login.txt", "w") as register:
+            with open("login.txt", "a+") as register:
                 use = c.recv(1024).decode()
                 pas = c.recv(1024).decode()
+                register.seek(0)
                 register.write(use)
                 register.write(":")
                 register.write(pas)
+                register.write('\n')
                 c.send("continue".encode())
 
             with open("login.txt", "r") as login:
