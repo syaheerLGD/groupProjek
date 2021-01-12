@@ -32,13 +32,14 @@ class Client:
         self.sock.connect((self.target_ip,int(self.target_port)))
 
         self.main()
-	
+
     def reconnect(self):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.sock.connect((self.target_ip,int(self.target_port)))
 
     def main(self):
         New = input('\tAre you a new user?(y/n) :')
+        self.sock.send(New.encode())
         if New == 'y':
             use = input('\tUsername :')
             self.sock.send(use.encode())
@@ -58,7 +59,7 @@ class Client:
                     self.sock.shutdown(socket.SHUT_RDWR)
                     self.sock.close()
                     sys.exit()
-                elif login.decode() == "Not-a-user":
+                else:
                     print(login.decode())
         else:
             print('\t\t%Login%')
@@ -75,15 +76,14 @@ class Client:
                 sys.exit()
             else:
                 print(login.decode())
-
-
+		
         print("\t|Enter 'exit' To Terminate Connection.| ")
         while 1:
             file_name = input('\tPlease Enter File Name On Server : ')
             if file_name == "exit":
-                self.sock.shutdown(socket.SHUT_RWDR)
-                self.sock.close()
-                #sys.exit()
+                #self.sock.shutdown(socket.SHUT_RWDR)
+                #self.sock.close()
+                sys.exit()
 
             else:
                 self.sock.send(file_name.encode())
@@ -97,7 +97,7 @@ class Client:
                 self.sock.close()
                 self.reconnect()
 
-            else:        
+            else:
                 write_name = file_name
                 if os.path.exists(write_name): os.remove(write_name)
 
@@ -116,5 +116,5 @@ class Client:
                 self.sock.shutdown(socket.SHUT_RDWR)
                 self.sock.close()
                 self.reconnect()
-                
+
 client = Client()
