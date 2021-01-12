@@ -84,24 +84,26 @@ class Server:
                     c.send("Not-a-user".encode())
                     #c.close()
 
-        data = c.recv(1024).decode()
-        if not os.path.exists(data):
-            c.send("File Doesn't Exist In The Server".encode())
-            
-        else:
-            c.send("File Exist".encode())
-            print('\tSending',data)
-            if data != '':
-                file = open(data,'rb')
-                data = file.read(1024)
-#                encrypted_data = f.encrypt(data)
-                while data:
-                    c.send(data)
+        while 1:
+            data = c.recv(1024).decode()
+            if not os.path.exists(data):
+                c.send("File Doesn't Exist In The Server".encode())
+                continue
+            else:
+                c.send("File Exist".encode())
+                print('\tSending',data)
+                if data != '':
+                    file = open(data,'rb')
                     data = file.read(1024)
+                    #encrypted_data = f.encrypt(data)
+                    while data:
+                        c.send(data)
+                        data = file.read(1024)
+                continue
+               #c.shutdown(socket.SHUT_RDWR)
+               #c.close()
 
-
-                c.shutdown(socket.SHUT_RDWR)
-                c.close()
-
+        #c.shutdown(socket.SHUT_RDWR)
+        #c.close()
 
 server = Server()
