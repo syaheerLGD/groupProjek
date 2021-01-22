@@ -3,9 +3,7 @@ import os
 import tqdm
 import time
 import sys
-
-def encrpyt(file_name,key):
-     f = Fernet(key)
+import getpass
 
 def animation(msg):
         for char in msg:
@@ -13,8 +11,6 @@ def animation(msg):
                 sys.stdout.flush()
                 time.sleep(0.1)
 
-#BUFFER_SIZE = 4096
-#SEPARATOR = "<SEPARATOR>"
 class Client:
     start = '\t\tWelcome To Secure File Transfer\n'
     animation(start)
@@ -33,24 +29,20 @@ class Client:
 
         self.main()
 
-    def reconnect(self):
-        self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.sock.connect((self.target_ip,int(self.target_port)))
-
     def main(self):
         New = input('\tAre you a new user?(y/n) :')
         self.sock.send(New.encode())
         if New == 'y':
-            use = input('\tUsername :')
+            username = input('\tUsername :')
             self.sock.send(use.encode())
-            pas = input('\tPassword :')
+            password = getpass.getpass('\tPassword : ', stream=None)
             self.sock.send(pas.encode())
             register = self.sock.recv(1024)
             if register.decode() == "continue":
                 print('\t\t%Login Again%')
                 username = input('\tUsername: ')
                 self.sock.send(username.encode())
-                password = input('\tPassword: ')
+                password = getpass.getpass('\tPassword : ', stream=None)
                 self.sock.send(password.encode())
 
                 login = self.sock.recv(1024)
@@ -65,7 +57,7 @@ class Client:
             print('\t\t%Login%')
             username = input('\tUsername: ')
             self.sock.send(username.encode())
-            password = input('\tPassword: ')
+            password = getpass.getpass('\tPassword : ', stream=None)
             self.sock.send(password.encode())
 
             login = self.sock.recv(1024)
