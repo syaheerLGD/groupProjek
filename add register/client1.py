@@ -73,8 +73,6 @@ class Client:
         while 1:
             file_name = input('\tPlease Enter File Name On Server : ')
             if file_name == "exit":
-                #self.sock.shutdown(socket.SHUT_RWDR)
-                #self.sock.close()
                 sys.exit()
 
             else:
@@ -85,9 +83,6 @@ class Client:
                 exist = "\tFile Doesn't Exist At Server.\n"
                 animation(exist)
                 continue
-                #self.sock.shutdown(socket.SHUT_RDWR)
-                #self.sock.close()
-                #self.reconnect()
 
             else:
                 write_name = file_name
@@ -106,9 +101,5 @@ class Client:
                 success = '\tFile Successfully Downloaded.\n'
                 animation(success)
                 continue
-
-                #self.sock.shutdown(socket.SHUT_RDWR)
-                #self.sock.close()
-                #self.reconnect()
 
 client = Client()
