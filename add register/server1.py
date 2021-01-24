@@ -4,10 +4,6 @@ import threading
 import socket
 import tqdm
 import time
-from cryptography.fernet import Fernet
-
-def encryp(filename,key):
-    f = Fernet(key)
 
 def animation(msg):
         for char in msg:
@@ -100,10 +96,5 @@ class Server:
                         c.send(data)
                         data = file.read(1024)
                 continue
-               #c.shutdown(socket.SHUT_RDWR)
-               #c.close()
-
-        #c.shutdown(socket.SHUT_RDWR)
-        #c.close()
 
 server = Server()
